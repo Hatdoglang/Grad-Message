@@ -95,10 +95,10 @@
 
         .card {
             position: absolute;
-            top: -180px;
+            top: -290px;
             left: 0;
-            width: 900px;
-            height: 790px;
+            width: 1000px;
+            height: 890px;
             margin-left: -130px;
             background-color: #fff;
             padding: 30px 35px;
@@ -252,12 +252,12 @@
             margin-bottom: 10px;
             animation: bounce 1.5s infinite;
             font-size: 1.2em;
-            color: #fff;
+            color: #000;
             text-shadow:
-                -1px -1px 0 #000,
-                1px -1px 0 #000,
-                -1px 1px 0 #000,
-                1px 1px 0 #000;
+                -1px -1px 0 #fff,
+                1px -1px 0 #fff,
+                -1px 1px 0 #fff,
+                1px 1px 0 #fff;
             /* This creates a visible outline effect */
         }
 
@@ -273,7 +273,79 @@
                 transform: translateY(-8px);
             }
         }
+
+        .congrats {
+            display: inline-block;
+            font-weight: bold;
+            font-size: 1.8em;
+            color: #000;
+            margin-left: 10px;
+            animation: pulseBounce 2s ease-in-out infinite;
+        }
+
+        @keyframes pulseBounce {
+            0% {
+                transform: scale(1);
+                color: #000;
+                text-shadow: 0 0 5px #474747;
+            }
+
+            50% {
+                transform: scale(1.2);
+                color: #000;
+                text-shadow: 0 0 20px #000;
+            }
+
+            100% {
+                transform: scale(1);
+                color: #000;
+                text-shadow: 0 0 5px #000;
+            }
+        }
+
+        #fireworksCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .congrats-inline {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-left: 5px;
+        }
+
+        .congrats {
+            font-size: 1.2em;
+            color: rgb(0, 0, 0);
+            font-weight: bold;
+            margin-top: 30px;
+            animation: pop 0.5s ease-in-out;
+        }
+
+        @keyframes pop {
+            0% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .fireworks-canvas {
+            background: transparent;
+            pointer-events: none;
+        }
     </style>
+
 </head>
 
 <body>
@@ -289,36 +361,110 @@
                 <img src="profile.jpg" alt="Graduation Image" class="top-image" />
 
                 <div class="text">
-                    <div>
-                        <strong>To: Everyone</strong><br /><br />
+  <div>
+    <strong>To: Everyone</strong><br /><br />
 
-                        I’m proud to share that I, <strong>Christian Delapos</strong>, have officially graduated! 🎓
-                        After countless hours of coding, sleepless nights, and lots of coffee, I can finally say
-                        <strong>"Mana jud!"</strong><br /><br />
+    I’m proud to share that I, <strong>Christian Delapos</strong>, have officially graduated! 🎓  
+    After many late nights, countless hours of coding, and endless cups of coffee, I can finally say:  
+    <br />
+    <span class="congrats-inline">
+      <canvas class="fireworks-canvas" id="leftFireworks" width="40" height="40"></canvas>
+      <strong class="congrats">"Mana jud!"</strong>
+      <canvas class="fireworks-canvas" id="rightFireworks" width="40" height="40"></canvas>
+    </span>
+    <br /><br />
 
-                        This isn’t the end, but the start of a new chapter.<br /><br />
+    This is not the end—but the start of a new journey.  
+    <br /><br />
 
-                        Thank you  "<strong>Nay</strong>, <strong>Tay</strong>" for your love and support.<br /><br />
+    To my parents, <strong>Nay</strong> and <strong>Tay</strong>, thank you for your love and support.  
+    <br /><br />
 
-                        To my "<strong>Ate</strong> and <strong>Kuya</strong>"  <strong>Analiza</strong>, <strong>Manang</strong>, <strong>Analou</strong>, and
-                        <strong>Manong</strong> 
-                        thank you not only for the financial help but also for standing by me.
-                        <strong>Thanks a lot for helping me win this battle.</strong><br /><br />
+    To my Ate og Kuya <strong> Analiza, Manang, Analou, and Manong</strong> thank you for standing by me,  
+    and for all your support, both emotional and financial.  
+    <br />
+    I truly couldn’t have done this without you.
+    <br /><br />
 
-                        Special thanks to <strong>Kuya Francis</strong> for helping me get started with coding and
-                        guiding me on which programming language to learn first.<br /><br />
+    Special thanks to <strong>Kuya Francis</strong> for helping me start my coding journey  
+    and guiding me on which language to learn first.  
+    <br /><br />
 
-                        Thank you also for accepting the client project we worked on together — when I felt unsure about
-                        handling the application side,
-                        you said, <em>"Kuhaa ra Chan, akoy bahala sa application, ikaw sa web."</em><br />
-                        That moment really boosted my confidence, and I learned so much from working with you.
-                    </div>
+    I’m also grateful for the chance to work with you on a client project.  
+    When I wasn’t sure how to handle the application part, you simply said:  
+    <em>"Kuhaa ra Chan, akoy bahala sa application, ikaw sa web."</em>  
+    That moment gave me confidence—and I learned so much from it.  
+  </div>
+</div>
 
-                </div>
+
 
             </div>
             <div class="shadow"></div>
         </div>
+        <script>
+            function startFireworks(canvasId) {
+                const canvas = document.getElementById(canvasId);
+                const ctx = canvas.getContext("2d");
+
+                function random(min, max) {
+                    return Math.random() * (max - min) + min;
+                }
+
+                function Firework(centerX, centerY) {
+                    const angle = random(0, 2 * Math.PI);
+                    const speed = random(1, 2); // moderate burst speed
+
+                    this.x = centerX;
+                    this.y = centerY;
+                    this.radius = 1.5;
+                    this.color = `hsl(${Math.floor(random(0, 360))}, 100%, 60%)`;
+                    this.velocityX = Math.cos(angle) * speed;
+                    this.velocityY = Math.sin(angle) * speed;
+                    this.alpha = 1;
+                }
+
+                let fireworks = [];
+
+                function animate() {
+                    requestAnimationFrame(animate);
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                    fireworks.forEach((f, i) => {
+                        f.x += f.velocityX;
+                        f.y += f.velocityY;
+                        f.alpha -= 0.015;
+
+                        ctx.beginPath();
+                        ctx.arc(f.x, f.y, f.radius, 0, Math.PI * 2);
+                        ctx.fillStyle = f.color;
+                        ctx.globalAlpha = f.alpha;
+                        ctx.fill();
+
+                        if (f.alpha <= 0) fireworks.splice(i, 1);
+                    });
+
+                    ctx.globalAlpha = 1;
+                }
+
+                function launch() {
+                    const x = canvas.width / 2;
+                    const y = canvas.height / 2;
+
+                    for (let i = 0; i < 15; i++) {
+                        fireworks.push(new Firework(x, y));
+                    }
+                }
+
+                launch();
+                setInterval(launch, 2000);
+                animate();
+            }
+
+            startFireworks("leftFireworks");
+            startFireworks("rightFireworks");
+        </script>
+
 
         <script>
             $(document).ready(function () {
