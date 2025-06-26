@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Graduation Card</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background-color: #b1e3f7;
+            font-family: "Poppins", sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .container {
+            position: relative;
+            width: 600px;
+            height: 450px;
+            cursor: pointer;
+        }
+
+        .valentines {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .envelope {
+            width: 100%;
+            height: 100%;
+            background-color: #4a90e2;
+            /* Soft blue */
+            position: relative;
+            z-index: 5;
+            border-radius: 10px;
+        }
+
+        .envelope:before {
+            content: "";
+            position: absolute;
+            width: 420px;
+            height: 420px;
+            background-color: #4a90e2;
+            /* Blue flap */
+            transform: rotate(45deg);
+            top: -210px;
+            left: 90px;
+            border-radius: 30px 0 0 0;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .envelope.open:before {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .front {
+            position: absolute;
+            border-right: 360px solid #6bb9f0;
+            /* Lighter blue */
+            border-top: 225px solid transparent;
+            border-bottom: 225px solid transparent;
+            left: 240px;
+            top: 0;
+            width: 0;
+            height: 0;
+            z-index: 10;
+            transition: opacity 0.4s ease;
+        }
+
+        .front:before {
+            content: "";
+            position: absolute;
+            border-left: 600px solid #7fc1f0;
+            /* Light blue */
+            border-top: 450px solid transparent;
+            left: -240px;
+            top: -225px;
+            width: 0;
+            height: 0;
+        }
+
+        .card {
+            position: absolute;
+            top: -180px;
+            left: 0;
+            width: 900px;
+            height: 790px;
+            margin-left: -130px;
+            background-color: #fff;
+            padding: 30px 35px;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+            border-radius: 10px;
+            opacity: 0;
+            transform: scale(0.7);
+            transition: all 0.5s ease;
+            z-index: 20;
+            pointer-events: none;
+        }
+
+        .card.open {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: auto;
+            animation: zoomIn 0.5s ease;
+        }
+
+        .card:before {
+            content: "";
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            bottom: 15px;
+            border: 3px dotted #003049;
+            border-radius: 10px;
+            pointer-events: none;
+        }
+
+        .text {
+            position: relative;
+            color: #003049;
+            font-size: 15px;
+            line-height: 1.5;
+            z-index: 1;
+            text-align: center;
+            /* ✅ Center horizontally */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            /* ✅ Optional: center vertically */
+            height: 100%;
+            margin-top: -160px;
+        }
+
+        .text strong {
+            font-size: 17px;
+        }
+
+        .text em {
+            font-style: italic;
+        }
+
+        .heart {
+            background-color: #d62828;
+            display: inline-block;
+            height: 40px;
+            width: 40px;
+            transform: rotate(-45deg);
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            margin-left: -20px;
+        }
+
+        .heart:before,
+        .heart:after {
+            content: "";
+            background-color: #d62828;
+            border-radius: 50%;
+            height: 40px;
+            position: absolute;
+            width: 40px;
+        }
+
+        .heart:before {
+            top: -20px;
+            left: 0;
+        }
+
+        .heart:after {
+            left: 20px;
+            top: 0;
+        }
+
+        .shadow {
+            position: absolute;
+            width: 620px;
+            height: 25px;
+            border-radius: 50%;
+            background-color: rgba(0, 0, 0, 0.3);
+            bottom: -30px;
+            left: -10px;
+            animation: scale 3s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes zoomIn {
+            0% {
+                transform: scale(0.7);
+                opacity: 0;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes scale {
+
+            0%,
+            100% {
+                transform: scaleX(1);
+            }
+
+            50% {
+                transform: scaleX(0.85);
+            }
+        }
+
+        /* Optional scrollbar styling */
+        .card::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .card::-webkit-scrollbar-thumb {
+            background-color: #888;
+            border-radius: 3px;
+        }
+
+        .card::-webkit-scrollbar-track {
+            background-color: transparent;
+        }
+
+        .top-image {
+            width: 250px;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 10%;
+            display: block;
+            margin: 0 auto 15px auto;
+            /* center and add bottom space */
+        }
+
+        .click-message {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+            animation: bounce 1.5s infinite;
+            font-size: 1.2em;
+            color: #fff;
+            text-shadow:
+                -1px -1px 0 #000,
+                1px -1px 0 #000,
+                -1px 1px 0 #000,
+                1px 1px 0 #000;
+            /* This creates a visible outline effect */
+        }
+
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <p class="click-message">
+            📩 Click the envelope to see the message!
+        </p>
+
+        <div class="valentines">
+            <div class="envelope"></div>
+            <div class="front"></div>
+            <div class="card" id="card">
+                <img src="profile.jpg" alt="Graduation Image" class="top-image" />
+
+                <div class="text">
+                    <div>
+                        <strong>To: Everyone</strong><br /><br />
+
+                        I’m proud to share that I, <strong>Christian Delapos</strong>, have officially graduated! 🎓
+                        After countless hours of coding, sleepless nights, and lots of coffee, I can finally say
+                        <strong>"Mana jud!"</strong><br /><br />
+
+                        This isn’t the end, but the start of a new chapter.<br /><br />
+
+                        Thank you  "<strong>Nay</strong>, <strong>Tay</strong>" for your love and support.<br /><br />
+
+                        To my "<strong>Ate</strong> and <strong>Kuya</strong>"  <strong>Analiza</strong>, <strong>Manang</strong>, <strong>Analou</strong>, and
+                        <strong>Manong</strong> 
+                        thank you not only for the financial help but also for standing by me.
+                        <strong>Thanks a lot for helping me win this battle.</strong><br /><br />
+
+                        Special thanks to <strong>Kuya Francis</strong> for helping me get started with coding and
+                        guiding me on which programming language to learn first.<br /><br />
+
+                        Thank you also for accepting the client project we worked on together — when I felt unsure about
+                        handling the application side,
+                        you said, <em>"Kuhaa ra Chan, akoy bahala sa application, ikaw sa web."</em><br />
+                        That moment really boosted my confidence, and I learned so much from working with you.
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="shadow"></div>
+        </div>
+
+        <script>
+            $(document).ready(function () {
+                let open = false;
+
+                $(".container").click(function () {
+                    if (!open) {
+                        $("#card").addClass("open");
+                        $(".front").css("opacity", "0");
+                        open = true;
+                    } else {
+                        $("#card").removeClass("open");
+                        $(".front").css("opacity", "1");
+                        open = false;
+                    }
+                });
+            });
+        </script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const envelope = document.querySelector(".envelope");
+
+                envelope.addEventListener("click", function () {
+                    envelope.classList.toggle("open");
+                });
+            });
+        </script>
+</body>
+
+</html>
