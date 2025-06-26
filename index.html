@@ -97,9 +97,9 @@
             position: absolute;
             top: -290px;
             left: 0;
-            width: 1000px;
+            width: 900px;
             height: 890px;
-            margin-left: -130px;
+            margin-left: -156px;
             background-color: #fff;
             padding: 30px 35px;
             box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
@@ -344,6 +344,38 @@
             background: transparent;
             pointer-events: none;
         }
+        @media (max-width: 480px) {
+    .text {
+        font-size: 14px;
+        margin-top: -100px;
+    }
+
+    .card {
+        padding: 15px;
+    }
+
+    .top-image {
+        width: 180px;
+        height: 180px;
+    }
+
+    .click-message {
+        font-size: 1em;
+        padding: 0 10px;
+    }
+
+    .congrats {
+        font-size: 1.2em;
+    }
+
+    .card:before {
+        top: 10px;
+        left: 10px;
+        right: 10px;
+        bottom: 10px;
+    }
+}
+
     </style>
 
 </head>
